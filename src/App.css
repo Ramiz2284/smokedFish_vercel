@@ -1,0 +1,193 @@
+#root {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 2rem;
+	text-align: center;
+}
+
+.logo {
+	height: 6em;
+	padding: 1.5em;
+	will-change: filter;
+	transition: filter 300ms;
+}
+.logo:hover {
+	filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+	filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	a:nth-of-type(2) .logo {
+		animation: logo-spin infinite 20s linear;
+	}
+}
+
+.card {
+	padding: 2em;
+}
+
+.read-the-docs {
+	color: #888;
+}
+
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	background: linear-gradient(to bottom right, #e3f2fd, #c8e6c9);
+	color: #333;
+}
+
+.app {
+	min-height: 100vh;
+	padding: 20px;
+	text-align: center;
+}
+
+.app-title {
+	font-size: 2rem;
+	font-weight: bold;
+	margin-bottom: 20px;
+	color: #2c3e50;
+}
+
+.app-description {
+	font-size: 1rem;
+	margin-bottom: 40px;
+	color: #555;
+}
+
+.product-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 20px;
+	justify-content: center;
+}
+
+.product-card {
+	width: 100%;
+	max-width: 250px;
+	height: 350px;
+	perspective: 1000px;
+	cursor: pointer;
+	margin: 0 auto;
+}
+
+.product-card-front,
+.product-card-back {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	backface-visibility: hidden;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	transition: transform 0.6s;
+}
+
+.product-card-front {
+	background: #fff;
+}
+
+.product-card-back {
+	background: #f9f9f9;
+	transform: rotateY(180deg);
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+.product-card.flipped .product-card-front {
+	transform: rotateY(180deg);
+}
+
+.product-card.flipped .product-card-back {
+	transform: rotateY(0);
+}
+
+.product-image {
+	width: 100%;
+	height: 200px; /* Или другое значение */
+	object-fit: cover; /* Убедитесь, что изображение заполняет область */
+}
+
+.product-info {
+	padding: 10px;
+}
+
+.product-title {
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin: 10px 0;
+}
+
+.product-price {
+	font-size: 1rem;
+	color: #27ae60;
+}
+
+.product-description {
+	font-size: 0.9rem;
+	color: #555;
+}
+
+.whatsapp-button {
+	background-color: #25d366;
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 5px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin-top: 10px;
+}
+
+.whatsapp-button:hover {
+	background-color: #1da851;
+}
+
+@media (max-width: 768px) {
+	.app-title {
+		font-size: 1.5rem;
+	}
+
+	.app-description {
+		font-size: 0.9rem;
+	}
+
+	.product-grid {
+		grid-template-columns: 1fr; /* Одна колонка для мобильных устройств */
+		gap: 15px;
+	}
+
+	.product-card {
+		max-width: 100%;
+	}
+
+	.product-image {
+		height: 150px;
+	}
+
+	.product-title {
+		font-size: 1rem;
+	}
+
+	.product-price {
+		font-size: 0.9rem;
+	}
+
+	.whatsapp-button {
+		font-size: 0.9rem;
+		padding: 8px 12px;
+	}
+}
