@@ -38,6 +38,7 @@ const products = [
 const ProductCard = ({ product }) => {
 	const [flipped, setFlipped] = useState(false)
 	const [currentSlide, setCurrentSlide] = useState(0)
+	const [startX, setStartX] = useState(null)
 
 	const handleWhatsAppClick = () => {
 		const message = `Здравствуйте, я хочу заказать ${product.title}`
@@ -52,6 +53,28 @@ const ProductCard = ({ product }) => {
 		setCurrentSlide(index)
 	}
 
+	// Обработчики для свайпа
+	const handleMouseDown = e => {
+		setStartX(e.clientX)
+	}
+
+	const handleMouseUp = e => {
+		if (startX === null) return
+		const endX = e.clientX
+		const diff = startX - endX
+
+		if (diff > 50) {
+			// Свайп влево
+			setCurrentSlide(prev => (prev + 1) % product.images.length)
+		} else if (diff < -50) {
+			// Свайп вправо
+			setCurrentSlide(prev =>
+				prev === 0 ? product.images.length - 1 : prev - 1
+			)
+		}
+		setStartX(null)
+	}
+
 	return (
 		<div
 			onClick={() => setFlipped(!flipped)}
@@ -59,7 +82,11 @@ const ProductCard = ({ product }) => {
 		>
 			{/* Front Side */}
 			<div className='product-card-front'>
-				<div className='slider'>
+				<div
+					className='slider'
+					onMouseDown={handleMouseDown}
+					onMouseUp={handleMouseUp}
+				>
 					<img
 						src={product.images[currentSlide]} // Используем уникальные изображения
 						alt={product.title}
