@@ -75,6 +75,15 @@ const ProductCard = ({ product }) => {
 		setStartX(null)
 	}
 
+	// Обработчики для стрелок
+	const handleNext = () => {
+		setCurrentSlide(prev => (prev + 1) % product.images.length)
+	}
+
+	const handlePrev = () => {
+		setCurrentSlide(prev => (prev === 0 ? product.images.length - 1 : prev - 1))
+	}
+
 	return (
 		<div
 			onClick={() => setFlipped(!flipped)}
@@ -92,6 +101,24 @@ const ProductCard = ({ product }) => {
 						alt={product.title}
 						className='product-image'
 					/>
+					<button
+						className='slider-arrow left-arrow'
+						onClick={e => {
+							e.stopPropagation()
+							handlePrev()
+						}}
+					>
+						&#8249;
+					</button>
+					<button
+						className='slider-arrow right-arrow'
+						onClick={e => {
+							e.stopPropagation()
+							handleNext()
+						}}
+					>
+						&#8250;
+					</button>
 					<div className='slider-dots'>
 						{product.images.map((_, index) => (
 							<span
