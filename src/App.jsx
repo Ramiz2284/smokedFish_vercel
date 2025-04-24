@@ -4,32 +4,40 @@ import './App.css'
 const products = [
 	{
 		id: 1,
-		title: 'Копчёная форель',
-		image: '/images/forel.jpg',
-		price: '800₺ / кг',
+		title: 'Форель холодного копчения',
+		image: '/images/forel1.jpg',
+		price: '800₺ / kg',
 		description:
-			'Свежая форель холодного копчения. Без химии. Глубокая заморозка перед копчением до -40°C.',
+			'Форель черноморская, крупная, на местных рынках известна как турецкий лосось. Одна половина рыбы с вырезанным хребтом весит 900-1200 г. Готовим по ГОСТу: сухой посол, вымачивание, сушка и копчение на сливовой щепе.',
+		images: ['/images/forel1.jpg', '/images/forel2.jpg', '/images/forel3.jpg'], // Уникальные изображения
 	},
 	{
 		id: 2,
-		title: 'Говяжья колбаса',
+		title: 'Колбаса куриная горячего копчения',
 		image: '/images/kolbasa.jpg',
-		price: '450₺ / кг',
+		price: '500₺ / kg',
 		description:
-			'Домашняя колбаса из говядины. Пряности, копчение — всё по классике. Без добавок.',
+			'Колбаса из куриных бедрышек, очищенных от кожи. Только мясо и специи. Состав: чёрный перец, паприка, соль, мускатный орех, кардамон, острый красный перец, сушёный чеснок. Важно: не содержит нитритной соли. Хранится в замороженном виде.',
+		images: [
+			'/images/kolbasa.jpg',
+			'/images/kolbasa2.jpg',
+			'/images/kolbasa3.jpg',
+		], // Уникальные изображения
 	},
 	{
 		id: 3,
-		title: 'Скумбрия копчёная',
-		image: '/images/skumbria.jpg',
-		price: '700₺ / кг',
+		title: 'Домашний медовый квас',
+		image: '/images/kvas.png',
+		price: '100₺ / 1,5 l',
 		description:
-			'Нежная скумбрия горячего копчения. Сочный вкус, натуральное приготовление.',
+			'Квас домашний разливной на меду и хлебе. Состав: 70 г меда в каждом литре, хлеб, солод, живая закваска на основе ржаной муки. Я покупаю воду в бутылках по 1,5 литра, из этой воды делаю квас и в эти же бутылки разливаю.',
+		images: ['/images/kvas.png', '/images/kvas2.png', '/images/kvas3.png'], // Уникальные изображения
 	},
 ]
 
 const ProductCard = ({ product }) => {
 	const [flipped, setFlipped] = useState(false)
+	const [currentSlide, setCurrentSlide] = useState(0)
 
 	const handleWhatsAppClick = () => {
 		const message = `Здравствуйте, я хочу заказать ${product.title}`
@@ -40,6 +48,10 @@ const ProductCard = ({ product }) => {
 		window.open(url, '_blank')
 	}
 
+	const handleDotClick = index => {
+		setCurrentSlide(index)
+	}
+
 	return (
 		<div
 			onClick={() => setFlipped(!flipped)}
@@ -47,11 +59,25 @@ const ProductCard = ({ product }) => {
 		>
 			{/* Front Side */}
 			<div className='product-card-front'>
-				<img
-					src={product.image}
-					alt={product.title}
-					className='product-image'
-				/>
+				<div className='slider'>
+					<img
+						src={product.images[currentSlide]} // Используем уникальные изображения
+						alt={product.title}
+						className='product-image'
+					/>
+					<div className='slider-dots'>
+						{product.images.map((_, index) => (
+							<span
+								key={index}
+								className={`dot ${currentSlide === index ? 'active' : ''}`}
+								onClick={e => {
+									e.stopPropagation() // Останавливаем переворот карточки
+									handleDotClick(index)
+								}}
+							></span>
+						))}
+					</div>
+				</div>
 				<div className='product-info'>
 					<h2 className='product-title'>{product.title}</h2>
 					<p className='product-price'>{product.price}</p>
