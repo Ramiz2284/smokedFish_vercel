@@ -27,11 +27,11 @@ const products = [
 	{
 		id: 3,
 		title: 'Домашний медовый квас',
-		image: '/images/kvas.png',
+		image: '/images/kvas.jpg',
 		price: '100₺ / 1,5 l',
 		description:
 			'Квас домашний разливной на меду и хлебе. Состав: 70 г меда в каждом литре, хлеб, солод, живая закваска на основе ржаной муки. Я покупаю воду в бутылках по 1,5 литра, из этой воды делаю квас и в эти же бутылки разливаю.',
-		images: ['/images/kvas.png', '/images/kvas2.png', '/images/kvas3.png'], // Уникальные изображения
+		images: ['/images/kvas.jpg', '/images/kvas2.jpg', '/images/kvas3.jpg'], // Уникальные изображения
 	},
 ]
 
