@@ -13,15 +13,16 @@ const products = [
 	},
 	{
 		id: 2,
-		title: 'Колбаса куриная горячего копчения',
-		image: '/images/kolbasa.jpg',
-		price: '500₺ / kg',
+		title: 'Норвежский лосось (семга) холодного копчения',
+		image: '/images/somon2.jpg',
+		price: '1200₺ / kg',
 		description:
-			'Колбаса из куриных бедрышек, очищенных от кожи. Только мясо и специи. Состав: чёрный перец, паприка, соль, мускатный орех, кардамон, острый красный перец, сушёный чеснок. Важно: не содержит нитритной соли. Хранится в замороженном виде.',
+			'Норвежский лосось (семга) — крупная рыба, каждая по 5–6 кг. Отличается более жирным и мясистым мясом, нежнее по текстуре, чем у турецкого лосося. Отлично подходит для суши, салатов или бутербродов. Одна половина рыбы с удалённым хребтом весит 1500–1700 г. Готовим по ГОСТу: сухой посол, вымачивание, сушка и копчение на сливовой щепе.',
 		images: [
-			'/images/kolbasa.jpg',
-			'/images/kolbasa2.jpg',
-			'/images/kolbasa3.jpg',
+			'/images/somon.jpg',
+			'/images/somon2.jpg',
+			'/images/somon3.jpg',
+			'/images/somon4.jpg',
 		], // Уникальные изображения
 	},
 	{
@@ -95,6 +96,21 @@ const ProductCard = ({ product }) => {
 					className='slider'
 					onMouseDown={handleMouseDown}
 					onMouseUp={handleMouseUp}
+					onTouchStart={e => setStartX(e.touches[0].clientX)}
+					onTouchEnd={e => {
+						if (startX === null) return
+						const endX = e.changedTouches[0].clientX
+						const diff = startX - endX
+
+						if (diff > 50) {
+							setCurrentSlide(prev => (prev + 1) % product.images.length)
+						} else if (diff < -50) {
+							setCurrentSlide(prev =>
+								prev === 0 ? product.images.length - 1 : prev - 1
+							)
+						}
+						setStartX(null)
+					}}
 				>
 					<img
 						src={product.images[currentSlide]} // Используем уникальные изображения
