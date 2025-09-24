@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 
 const products = [
@@ -6,7 +6,7 @@ const products = [
 		id: 1,
 		title: 'Форель холодного копчения',
 		image: '/images/forel1.jpg',
-		price: '900₺ / kg',
+		price: '1000₺ / kg',
 		description:
 			'Форель черноморская, крупная, на местных рынках известна как турецкий лосось. Одна половина рыбы с вырезанным хребтом весит 900-1200 г. Готовим по ГОСТу: сухой посол, вымачивание, сушка и копчение на сливовой щепе.',
 		images: ['/images/forel1.jpg', '/images/forel2.jpg', '/images/forel3.jpg'], // Уникальные изображения
