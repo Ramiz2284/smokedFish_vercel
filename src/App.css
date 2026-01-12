@@ -137,7 +137,7 @@ body {
 }
 
 .product-description {
-	font-size: 0.9rem;
+	font-size: 13px;
 	color: #555;
 }
 
@@ -239,7 +239,7 @@ body {
 	}
 
 	.product-title {
-		font-size: 1rem;
+		font-size: 15px;
 	}
 
 	.product-price {
