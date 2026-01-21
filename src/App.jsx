@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 const products = [
@@ -45,7 +45,7 @@ const ProductCard = ({ product }) => {
 		const message = `Здравствуйте, я хочу заказать ${product.title}`
 		const phoneNumber = '905444558407'
 		const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-			message
+			message,
 		)}`
 		window.open(url, '_blank')
 	}
@@ -70,7 +70,7 @@ const ProductCard = ({ product }) => {
 		} else if (diff < -50) {
 			// Свайп вправо
 			setCurrentSlide(prev =>
-				prev === 0 ? product.images.length - 1 : prev - 1
+				prev === 0 ? product.images.length - 1 : prev - 1,
 			)
 		}
 		setStartX(null)
@@ -106,7 +106,7 @@ const ProductCard = ({ product }) => {
 							setCurrentSlide(prev => (prev + 1) % product.images.length)
 						} else if (diff < -50) {
 							setCurrentSlide(prev =>
-								prev === 0 ? product.images.length - 1 : prev - 1
+								prev === 0 ? product.images.length - 1 : prev - 1,
 							)
 						}
 						setStartX(null)
@@ -173,19 +173,69 @@ const ProductCard = ({ product }) => {
 }
 
 const App = () => {
+	const [bgLoaded, setBgLoaded] = useState({
+		low: false,
+		medium: false,
+		high: false,
+	})
+
+	useEffect(() => {
+		// Имитация загрузки фона низкого качества (быстро)
+		const lowTimer = setTimeout(() => {
+			setBgLoaded(prev => ({ ...prev, low: true }))
+		}, 200)
+
+		// Имитация загрузки фона среднего качества
+		const mediumTimer = setTimeout(() => {
+			setBgLoaded(prev => ({ ...prev, medium: true }))
+		}, 800)
+
+		// Имитация загрузки фона высокого качества
+		const highTimer = setTimeout(() => {
+			setBgLoaded(prev => ({ ...prev, high: true }))
+		}, 1400)
+
+		return () => {
+			clearTimeout(lowTimer)
+			clearTimeout(mediumTimer)
+			clearTimeout(highTimer)
+		}
+	}, [])
+
 	return (
-		<div className='app'>
-			<h1 className='app-title'>Копчёная рыба и колбаса в Анталии</h1>
-			<p className='app-description'>
-				Без химии, натуральное копчение каждую неделю. Безопасность — глубокой
-				заморозкой до -40°C перед приготовлением.
-			</p>
-			<div className='product-grid'>
-				{products.map(product => (
-					<ProductCard key={product.id} product={product} />
-				))}
+		<>
+			<div className='bg-container'>
+				<div className='bg-placeholder'></div>
+				<div
+					className={`bg-low-quality ${bgLoaded.medium ? 'medium-loaded' : ''}`}
+				></div>
+				<div
+					className={`bg-medium-quality ${bgLoaded.high ? 'high-loaded' : ''}`}
+				></div>
+				<div className='bg-high-quality'></div>
+				<div className='bg-overlay'></div>
 			</div>
-		</div>
+			<div className='app'>
+				<h1 className='app-title'>Копчёная рыба и колбаса в Анталии</h1>
+				<p className='app-description'>
+					Без химии, натуральное копчение каждую неделю. Безопасность — глубокой
+					заморозкой до -40°C перед приготовлением.
+				</p>
+				<a
+					href='https://maps.app.goo.gl/xRnRg3gnVhYKENgr9'
+					target='_blank'
+					rel='noopener noreferrer'
+					className='address-button'
+				>
+					Посмотреть адрес
+				</a>
+				<div className='product-grid'>
+					{products.map(product => (
+						<ProductCard key={product.id} product={product} />
+					))}
+				</div>
+			</div>
+		</>
 	)
 }
 
