@@ -57,7 +57,7 @@ const prerenderedHtml = `
 			<div class="hero-copy">
 				<p class="hero-kicker">Antalya • smoked salmon • smoked trout</p>
 				<h1>Копчёная семга и форель в Анталии</h1>
-				<p class="hero-lead">Норвежский лосось и турецкая форель горячего копчения. Доставка по Анталии и прямой заказ в WhatsApp.</p>
+				<p class="hero-lead">Норвежский лосось и турецкая форель холодного копчения. Доставка по Анталии и прямой заказ в WhatsApp.</p>
 				${renderCTA(false)}
 				<ul class="trust-list" aria-label="Преимущества">
 					${trustPoints.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
