@@ -1,239 +1,433 @@
-import { useEffect, useState } from 'react'
 import './App.css'
 
-const products = [
+const WHATSAPP_NUMBER = '905444558407'
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`
+const MAPS_URL = 'https://maps.app.goo.gl/xRnRg3gnVhYKENgr9'
+
+const trustPoints = [
+	'Свежие партии',
+	'Напрямую из коптильни',
+	'Доставка по Анталии',
+]
+
+const benefits = [
 	{
-		id: 1,
-		title: 'Форель холодного копчения',
-		image: '/images/forel1.jpg',
-		price: '1100₺ / kg',
-		description:
-			'Форель черноморская, крупная, на местных рынках известна как турецкий лосось. Одна половина рыбы с вырезанным хребтом весит 900-1200 г. Готовим по ГОСТу: сухой посол, вымачивание, сушка и копчение на сливовой щепе.',
-		images: ['/images/forel1.jpg', '/images/forel2.jpg', '/images/forel3.jpg'], // Уникальные изображения
+		title: 'Коптим сами',
+		text: 'Рыба готовится небольшими партиями, без витринного хранения и длинной цепочки посредников.',
 	},
 	{
-		id: 2,
-		title: 'Норвежский лосось (семга) холодного копчения',
-		image: '/images/somon2.jpg',
-		price: '1600₺ / kg',
-		description:
-			'Норвежский лосось (семга) — крупная рыба, каждая по 5–6 кг. Отличается более жирным и мясистым мясом, нежнее по текстуре, чем у турецкого лосося. Отлично подходит для суши, салатов или бутербродов. Одна половина рыбы с удалённым хребтом весит 1500–1700 г. Готовим по ГОСТу: сухой посол, вымачивание, сушка и копчение на сливовой щепе.',
-		images: [
-			'/images/somon.jpg',
-			'/images/somon2.jpg',
-			'/images/somon3.jpg',
-			'/images/somon4.jpg',
-		], // Уникальные изображения
+		title: 'Вкус без пересола',
+		text: 'Мягкая текстура, чистый дым и аккуратный баланс соли, чтобы рыба оставалась мясистой и сочной.',
 	},
 	{
-		id: 3,
-		title: 'Домашний медовый квас',
-		image: '/images/kvas.jpg',
-		price: '100₺ / 1,5 l',
-		description:
-			'Квас домашний разливной на меду и хлебе. Состав: 70 г меда в каждом литре, хлеб, солод, живая закваска на основе ржаной муки. Я покупаю воду в бутылках по 1,5 литра, из этой воды делаю квас и в эти же бутылки разливаю.',
-		images: ['/images/kvas.jpg', '/images/kvas2.jpg', '/images/kvas3.jpg'], // Уникальные изображения
+		title: 'Понятный заказ',
+		text: 'Пишите в WhatsApp, уточняем наличие и вес, подтверждаем доставку и быстро отправляем по Анталии.',
+	},
+	{
+		title: 'На стол и в подарок',
+		text: 'Подходит для семейного ужина, закусок, завтраков, праздничного стола и подарка без лишней упаковочной мишуры.',
 	},
 ]
 
-const ProductCard = ({ product }) => {
-	const [flipped, setFlipped] = useState(false)
-	const [currentSlide, setCurrentSlide] = useState(0)
-	const [startX, setStartX] = useState(null)
+const products = [
+	{
+		id: 'salmon',
+		name: 'Копчёный норвежский лосось',
+		entity: 'Smoked salmon in Antalya',
+		price: '1600₺ / кг',
+		image: '/images/somon2.jpg',
+		alt: 'Копчёный норвежский лосось в Анталии',
+		origin: 'Норвежский лосось с мягкой текстурой и более деликатным вкусом.',
+		taste: 'Нежный, маслянистый, с ровным копчением и мягкой солёностью.',
+		forWho:
+			'Подходит для бутербродов, салатов, праздничной подачи, бранчей и тех, кто любит классический premium smoked salmon.',
+		description:
+			'Хороший выбор, если хотите нежный копчёный лосось к столу, на подарок или для красивой подачи без лишних поисков по городу.',
+		weights: 'Подберём удобный кусок под ваш заказ и сразу скажем, что есть в наличии.',
+	},
+	{
+		id: 'trout',
+		name: 'Копчёная форель / Turkish salmon',
+		entity: 'Smoked trout in Antalya',
+		price: '1100₺ / кг',
+		image: '/images/forel1.jpg',
+		alt: 'Копчёная форель Turkish salmon в Анталии',
+		origin: 'Крупная форель, которую в Турции часто называют Turkish salmon.',
+		taste: 'Плотнее по текстуре, насыщенная по вкусу, отлично держит нарезку и подачу на стол.',
+		forWho:
+			'Хороший выбор, если нужен выразительный вкус smoked trout и более доступная альтернатива норвежскому лососю.',
+		description:
+			'Отличный вариант на каждый день, если хочется вкусной копчёной рыбы с насыщенным вкусом и более спокойной ценой.',
+		weights: 'Поможем выбрать подходящий кусок для семьи, гостей или аккуратной нарезки.',
+	},
+]
 
-	const handleWhatsAppClick = () => {
-		const message = `Здравствуйте, я хочу заказать ${product.title}`
-		const phoneNumber = '905444558407'
-		const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-			message,
-		)}`
-		window.open(url, '_blank')
-	}
+const orderSteps = [
+	{
+		title: '1. Напишите нам',
+		text: 'Откройте WhatsApp и напишите, какую рыбу хотите: smoked salmon или smoked trout.',
+	},
+	{
+		title: '2. Уточним вес и наличие',
+		text: 'Скажем, что есть сегодня, и поможем выбрать подходящий вес без лишних сомнений.',
+	},
+	{
+		title: '3. Подтвердим доставку',
+		text: 'Быстро согласуем район и удобное время доставки по Анталии.',
+	},
+	{
+		title: '4. Получите заказ',
+		text: 'Вы получаете свежую копчёную рыбу напрямую из коптильни в ближайшее доступное время.',
+	},
+]
 
-	const handleDotClick = index => {
-		setCurrentSlide(index)
-	}
+const deliveryDistricts = ['Konyaaltı', 'Lara', 'Muratpaşa']
 
-	// Обработчики для свайпа
-	const handleMouseDown = e => {
-		setStartX(e.clientX)
-	}
+const faqs = [
+	{
+		question: 'Где купить копчёный лосось в Анталии?',
+		answer:
+			'Заказать копчёный лосось в Анталии можно напрямую через сайт и WhatsApp. Мы готовим свежие партии и подтверждаем наличие перед доставкой по городу.',
+	},
+	{
+		question: 'Доставляете ли вы по Анталии?',
+		answer:
+			'Да, мы работаем по Анталии и подтверждаем район доставки при заказе. Чаще всего речь идёт о доставке в Konyaaltı, Lara, Muratpaşa и соседние районы по согласованию.',
+	},
+	{
+		question: 'Что у вас можно заказать?',
+		answer:
+			'На сайте можно заказать копчёный норвежский лосось и копчёную форель, которую часто называют Turkish salmon. Это две основные позиции для прямого заказа с доставкой по Анталии.',
+	},
+	{
+		question: 'Это действительно норвежский лосось?',
+		answer:
+			'Да, smoked salmon у нас — это норвежский лосось. Перед заказом мы отдельно подтверждаем наличие, чтобы вы понимали, что именно доступно сегодня.',
+	},
+	{
+		question: 'Чем отличается smoked trout от smoked salmon?',
+		answer:
+			'Smoked salmon обычно более жирный и мягкий по текстуре. Smoked trout плотнее, насыщеннее по вкусу и часто воспринимается как более доступная альтернатива.',
+	},
+	{
+		question: 'Форель — это Turkish salmon?',
+		answer:
+			'В Турции крупную форель действительно часто называют Turkish salmon. На сайте мы отдельно объясняем это, чтобы было проще выбрать между smoked trout и норвежским лососем.',
+	},
+	{
+		question: 'Рыба свежая?',
+		answer:
+			'Да, мы делаем акцент на свежих партиях и не растягиваем продажу одной и той же рыбы надолго. Перед отправкой всегда подтверждаем наличие и детали заказа.',
+	},
+	{
+		question: 'Готовите ли вы небольшими партиями?',
+		answer:
+			'Да, небольшие партии помогают сохранить вкус, свежесть и аккуратную текстуру. Поэтому рыба ощущается как продукт под заказ, а не как товар с долгого хранения.',
+	},
+	{
+		question: 'Как сделать заказ?',
+		answer:
+			'Самый быстрый способ — написать в WhatsApp с сайта. Мы уточняем вид рыбы, вес, адрес и подтверждаем доставку в Анталии.',
+	},
+	{
+		question: 'Какой вес можно заказать?',
+		answer:
+			'Заказ собирается по доступности текущей партии и вашему запросу по весу. Точный вес и формат куска мы согласовываем в переписке перед подтверждением.',
+	},
+	{
+		question: 'Сколько занимает доставка?',
+		answer:
+			'Точное время зависит от района, загрузки и наличия партии в день заказа. Обычно мы предлагаем ближайшее доступное окно доставки после подтверждения деталей.',
+	},
+	{
+		question: 'Подходит ли smoked trout как более доступная альтернатива?',
+		answer:
+			'Да, smoked trout часто выбирают как более доступный вариант по сравнению с норвежским smoked salmon. При этом у форели плотная текстура и насыщенный вкус, который хорошо подходит для повседневного стола.',
+	},
+]
 
-	const handleMouseUp = e => {
-		if (startX === null) return
-		const endX = e.clientX
-		const diff = startX - endX
+const localBusinessSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'LocalBusiness',
+	name: 'Smoked Fish Antalya',
+	description:
+		'Direct order of smoked salmon and smoked trout in Antalya with local delivery.',
+	areaServed: {
+		'@type': 'City',
+		name: 'Antalya',
+	},
+	address: {
+		'@type': 'PostalAddress',
+		addressLocality: 'Antalya',
+		addressCountry: 'TR',
+	},
+	telephone: `+${WHATSAPP_NUMBER}`,
+	url: 'https://smoked-fish-vercel.vercel.app/',
+	hasMap: MAPS_URL,
+	sameAs: [MAPS_URL],
+}
 
-		if (diff > 50) {
-			// Свайп влево
-			setCurrentSlide(prev => (prev + 1) % product.images.length)
-		} else if (diff < -50) {
-			// Свайп вправо
-			setCurrentSlide(prev =>
-				prev === 0 ? product.images.length - 1 : prev - 1,
-			)
-		}
-		setStartX(null)
-	}
+const productSchema = products.map(product => ({
+	'@context': 'https://schema.org',
+	'@type': 'Product',
+	name: product.name,
+	description: `${product.description} ${product.origin} ${product.taste}`,
+	image: `https://smoked-fish-vercel.vercel.app${product.image}`,
+	brand: {
+		'@type': 'Brand',
+		name: 'Smoked Fish Antalya',
+	},
+	offers: {
+		'@type': 'Offer',
+		priceCurrency: 'TRY',
+		availability: 'https://schema.org/InStock',
+		areaServed: 'Antalya',
+		url: 'https://smoked-fish-vercel.vercel.app/',
+	},
+}))
 
-	// Обработчики для стрелок
-	const handleNext = () => {
-		setCurrentSlide(prev => (prev + 1) % product.images.length)
-	}
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map(item => ({
+		'@type': 'Question',
+		name: item.question,
+		acceptedAnswer: {
+			'@type': 'Answer',
+			text: item.answer,
+		},
+	})),
+}
 
-	const handlePrev = () => {
-		setCurrentSlide(prev => (prev === 0 ? product.images.length - 1 : prev - 1))
-	}
+function CTAGroup({ compact = false }) {
+	const message =
+		'Здравствуйте! Хочу заказать копчёную рыбу в Анталии: smoked salmon или smoked trout. Подскажите наличие и доставку.'
 
 	return (
-		<div
-			onClick={() => setFlipped(!flipped)}
-			className={`product-card ${flipped ? 'flipped' : ''}`}
-		>
-			{/* Front Side */}
-			<div className='product-card-front'>
-				<div
-					className='slider'
-					onMouseDown={handleMouseDown}
-					onMouseUp={handleMouseUp}
-					onTouchStart={e => setStartX(e.touches[0].clientX)}
-					onTouchEnd={e => {
-						if (startX === null) return
-						const endX = e.changedTouches[0].clientX
-						const diff = startX - endX
-
-						if (diff > 50) {
-							setCurrentSlide(prev => (prev + 1) % product.images.length)
-						} else if (diff < -50) {
-							setCurrentSlide(prev =>
-								prev === 0 ? product.images.length - 1 : prev - 1,
-							)
-						}
-						setStartX(null)
-					}}
-				>
-					<img
-						src={product.images[currentSlide]} // Используем уникальные изображения
-						alt={product.title}
-						className='product-image'
-					/>
-					<button
-						className='slider-arrow left-arrow'
-						onClick={e => {
-							e.stopPropagation()
-							handlePrev()
-						}}
-					>
-						&#8249;
-					</button>
-					<button
-						className='slider-arrow right-arrow'
-						onClick={e => {
-							e.stopPropagation()
-							handleNext()
-						}}
-					>
-						&#8250;
-					</button>
-					<div className='slider-dots'>
-						{product.images.map((_, index) => (
-							<span
-								key={index}
-								className={`dot ${currentSlide === index ? 'active' : ''}`}
-								onClick={e => {
-									e.stopPropagation() // Останавливаем переворот карточки
-									handleDotClick(index)
-								}}
-							></span>
-						))}
-					</div>
-				</div>
-				<div className='product-info'>
-					<h2 className='product-title'>{product.title}</h2>
-					<p className='product-price'>{product.price}</p>
-				</div>
-			</div>
-
-			{/* Back Side */}
-			<div className='product-card-back'>
-				<h2 className='product-title'>{product.title}</h2>
-				<p className='product-description'>{product.description}</p>
-				<button
-					className='whatsapp-button'
-					onClick={e => {
-						e.stopPropagation() // Останавливаем переворот карточки
-						handleWhatsAppClick()
-					}}
-				>
-					Заказать в WhatsApp
-				</button>
-			</div>
+		<div className={`cta-group ${compact ? 'cta-group--compact' : ''}`}>
+			<a
+				className='button button--primary'
+				href={`${WHATSAPP_URL}?text=${encodeURIComponent(message)}`}
+				target='_blank'
+				rel='noreferrer'
+			>
+				Заказать в WhatsApp
+			</a>
+			<a className='button button--secondary' href='#products'>
+				Смотреть рыбу
+			</a>
 		</div>
 	)
 }
 
-const App = () => {
-	const [bgLoaded, setBgLoaded] = useState({
-		low: false,
-		medium: false,
-		high: false,
-	})
+function SectionHeading({ eyebrow, title, text, centered = false }) {
+	return (
+		<div className={`section-heading ${centered ? 'section-heading--centered' : ''}`}>
+			{eyebrow ? <p className='section-eyebrow'>{eyebrow}</p> : null}
+			<h2>{title}</h2>
+			{text ? <p>{text}</p> : null}
+		</div>
+	)
+}
 
-	useEffect(() => {
-		// Имитация загрузки фона низкого качества (быстро)
-		const lowTimer = setTimeout(() => {
-			setBgLoaded(prev => ({ ...prev, low: true }))
-		}, 200)
-
-		// Имитация загрузки фона среднего качества
-		const mediumTimer = setTimeout(() => {
-			setBgLoaded(prev => ({ ...prev, medium: true }))
-		}, 800)
-
-		// Имитация загрузки фона высокого качества
-		const highTimer = setTimeout(() => {
-			setBgLoaded(prev => ({ ...prev, high: true }))
-		}, 1400)
-
-		return () => {
-			clearTimeout(lowTimer)
-			clearTimeout(mediumTimer)
-			clearTimeout(highTimer)
-		}
-	}, [])
-
+function App() {
 	return (
 		<>
-			<div className='bg-container'>
-				<div className='bg-placeholder'></div>
-				<div
-					className={`bg-low-quality ${bgLoaded.medium ? 'medium-loaded' : ''}`}
-				></div>
-				<div
-					className={`bg-medium-quality ${bgLoaded.high ? 'high-loaded' : ''}`}
-				></div>
-				<div className='bg-high-quality'></div>
-				<div className='bg-overlay'></div>
-			</div>
-			<div className='app'>
-				<h1 className='app-title'>Копчёная рыба и колбаса в Анталии</h1>
-				<p className='app-description'>
-					Без химии, натуральное копчение каждую неделю. Безопасность — глубокой
-					заморозкой до -40°C перед приготовлением.
-				</p>
-				<a
-					href='https://maps.app.goo.gl/xRnRg3gnVhYKENgr9'
-					target='_blank'
-					rel='noopener noreferrer'
-					className='address-button'
-				>
-					Посмотреть адрес
-				</a>
-				<div className='product-grid'>
-					{products.map(product => (
-						<ProductCard key={product.id} product={product} />
-					))}
-				</div>
+			<script
+				type='application/ld+json'
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+			/>
+			<script
+				type='application/ld+json'
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+			/>
+			<script
+				type='application/ld+json'
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+			/>
+
+			<div className='page-shell'>
+				<header className='hero'>
+					<nav className='topbar' aria-label='Основная навигация'>
+						<a className='brand' href='/'>
+							Smoked Fish Antalya
+						</a>
+						<div className='topbar-links'>
+							<a href='#products'>Рыба</a>
+							<a href='#faq'>FAQ</a>
+							<a href={MAPS_URL} target='_blank' rel='noreferrer'>
+								Antalya delivery
+							</a>
+						</div>
+					</nav>
+
+					<div className='hero-grid'>
+						<div className='hero-copy'>
+							<p className='hero-kicker'>Smoked salmon • Smoked trout • Antalya</p>
+							<h1>Копчёный лосось в Анталии — свежие партии напрямую из коптильни</h1>
+							<p className='hero-lead'>
+								Норвежский лосось и копчёная форель с доставкой по Анталии. Легко
+								заказать напрямую, быстро понять разницу и выбрать рыбу под ваш вкус.
+							</p>
+							<CTAGroup />
+							<ul className='trust-list' aria-label='Преимущества'>
+								{trustPoints.map(item => (
+									<li key={item}>{item}</li>
+								))}
+							</ul>
+						</div>
+
+						<div className='hero-card'>
+							<div className='hero-card__media'>
+								<img
+									src='/images/somon.jpg'
+									alt='Свежий копчёный лосось для заказа в Анталии'
+								/>
+							</div>
+							<div className='hero-card__body'>
+								<p className='hero-card__label'>Direct order in Antalya</p>
+								<h2>Рыба, которую приятно подать и удобно заказать</h2>
+								<p>
+									Копчёный лосось выбирают за мягкий вкус и нежную текстуру.
+									Форель / Turkish salmon берут, когда нужен более яркий вкус и
+									хорошая цена на каждый день.
+								</p>
+								<div className='hero-card__meta'>
+									<span>Лосось: 1600₺ / кг</span>
+									<span>Форель: 1100₺ / кг</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</header>
+
+				<main>
+					<section className='section' aria-labelledby='why-buy'>
+						<SectionHeading
+							eyebrow='Почему покупают у нас'
+							title='Свежая копчёная рыба без сложного выбора'
+							text='Здесь всё просто: хороший продукт, понятный заказ и доставка по Анталии без лишней суеты.'
+						/>
+						<div className='benefit-grid'>
+							{benefits.map(item => (
+								<article className='benefit-card' key={item.title}>
+									<h3>{item.title}</h3>
+									<p>{item.text}</p>
+								</article>
+							))}
+						</div>
+					</section>
+
+					<section className='section section--accent' id='products' aria-labelledby='products-title'>
+						<SectionHeading
+							eyebrow='Что можно заказать'
+							title='Два понятных продукта под разный вкус и бюджет'
+							text='Коротко показываем разницу, чтобы вы быстро выбрали подходящий вариант и сразу оформили заказ.'
+						/>
+						<div className='product-grid'>
+							{products.map(product => (
+								<article className='product-card' key={product.id}>
+									<div className='product-card__image'>
+										<img src={product.image} alt={product.alt} />
+									</div>
+									<div className='product-card__content'>
+										<div className='product-card__topline'>
+											<p className='product-card__entity'>{product.entity}</p>
+											<p className='product-card__price'>{product.price}</p>
+										</div>
+										<h3>{product.name}</h3>
+										<p className='product-card__summary'>{product.description}</p>
+										<ul className='product-points'>
+											<li>
+												<strong>Что это:</strong> {product.origin}
+											</li>
+											<li>
+												<strong>Какой вкус:</strong> {product.taste}
+											</li>
+											<li>
+												<strong>Кому понравится:</strong> {product.forWho}
+											</li>
+											<li>
+												<strong>Как выбрать:</strong> {product.weights}
+											</li>
+										</ul>
+									</div>
+								</article>
+							))}
+						</div>
+					</section>
+
+					<section className='section' aria-labelledby='order-title'>
+						<SectionHeading
+							eyebrow='Как заказать'
+							title='Без звонков, сложных форм и долгих согласований'
+							text='Маршрут заказа максимально короткий: сообщение, подтверждение веса, доставка.'
+						/>
+						<div className='steps-grid'>
+							{orderSteps.map(step => (
+								<article className='step-card' key={step.title}>
+									<h3>{step.title}</h3>
+									<p>{step.text}</p>
+								</article>
+							))}
+						</div>
+					</section>
+
+					<section className='section section--accent' aria-labelledby='delivery-title'>
+						<SectionHeading
+							eyebrow='Доставка в Анталии'
+							title='Локальная доставка по Antalya с подтверждением условий при заказе'
+							text='Просто напишите нам, а район, время и детали доставки мы быстро подтвердим в переписке.'
+						/>
+						<div className='delivery-panel'>
+							<div>
+								<h3>Районы, которые спрашивают чаще всего</h3>
+								<div className='district-list' aria-label='Районы доставки'>
+									{deliveryDistricts.map(district => (
+										<span key={district}>{district}</span>
+									))}
+								</div>
+							</div>
+							<div>
+								<h3>Что важно знать перед заказом</h3>
+								<ul className='delivery-points'>
+									<li>Доставка по Анталии подтверждается после уточнения адреса.</li>
+									<li>Свежая партия и ближайшее доступное время согласуются в WhatsApp.</li>
+									<li>Условия доставки сообщаем сразу при подтверждении заказа.</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<section className='section' id='faq' aria-labelledby='faq-title'>
+						<SectionHeading
+							eyebrow='FAQ'
+							title='Короткие ответы на вопросы перед заказом'
+							text='Собрали самые частые вопросы, чтобы вы сразу понимали, как проходит заказ и что выбрать.'
+						/>
+						<div className='faq-list'>
+							{faqs.map(item => (
+								<details className='faq-item' key={item.question}>
+									<summary>{item.question}</summary>
+									<p>{item.answer}</p>
+								</details>
+							))}
+						</div>
+					</section>
+
+					<section className='section final-cta' aria-labelledby='reserve-title'>
+						<div className='final-cta__content'>
+							<p className='section-eyebrow'>Свежие партии не лежат неделями</p>
+							<h2 id='reserve-title'>Напишите сейчас, чтобы забронировать нужный вес</h2>
+							<p>
+								Если вам нужен копчёный лосось или копчёная форель в Анталии,
+								лучше написать сразу. Мы быстро подтвердим наличие, формат куска и
+								доставку по вашему району.
+							</p>
+							<CTAGroup compact />
+						</div>
+					</section>
+				</main>
 			</div>
 		</>
 	)
