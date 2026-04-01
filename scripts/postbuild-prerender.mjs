@@ -26,6 +26,11 @@ const escapeHtml = value =>
 		.replaceAll("'", '&#39;')
 
 const ctaHref = `${WHATSAPP_URL}?text=${encodeURIComponent(ctaMessage)}`
+const schemaMarkup = [
+	`<script type="application/ld+json">${JSON.stringify(localBusinessSchema)}</script>`,
+	`<script type="application/ld+json">${JSON.stringify(productSchema)}</script>`,
+	`<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>`,
+].join('\n')
 
 const renderCTA = compact => `
 	<div class="cta-cluster ${compact ? 'cta-cluster--compact' : ''}">
@@ -38,9 +43,6 @@ const renderCTA = compact => `
 `
 
 const prerenderedHtml = `
-<script type="application/ld+json">${JSON.stringify(localBusinessSchema)}</script>
-<script type="application/ld+json">${JSON.stringify(productSchema)}</script>
-<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>
 <div class="page-shell">
 	<header class="hero">
 		<nav class="topbar" aria-label="Основная навигация">
@@ -181,10 +183,10 @@ const prerenderedHtml = `
 				${faqs
 					.map(
 						item => `
-					<details class="faq-item">
-						<summary>${escapeHtml(item.question)}</summary>
+					<article class="faq-item">
+						<h3>${escapeHtml(item.question)}</h3>
 						<p>${escapeHtml(item.answer)}</p>
-					</details>`,
+					</article>`,
 					)
 					.join('')}
 			</div>
@@ -203,10 +205,9 @@ const prerenderedHtml = `
 
 const distIndexPath = path.resolve('dist/index.html')
 const currentHtml = await fs.readFile(distIndexPath, 'utf8')
-const updatedHtml = currentHtml.replace(
-	'<div id="root"></div>',
-	`<div id="root">${prerenderedHtml}</div>`,
-)
+const updatedHtml = currentHtml
+	.replace('<!--prerender-schema-->', schemaMarkup)
+	.replace('<!--prerender-root-->', prerenderedHtml)
 
 if (updatedHtml === currentHtml) {
 	throw new Error('Не удалось внедрить предрендеренный HTML в dist/index.html')

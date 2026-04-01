@@ -5,11 +5,8 @@ import {
 	ctaMessage,
 	ctaNote,
 	deliveryDistricts,
-	faqSchema,
 	faqs,
-	localBusinessSchema,
 	orderSteps,
-	productSchema,
 	products,
 	trustPoints,
 } from './siteContent'
@@ -47,21 +44,7 @@ function SectionHeading({ eyebrow, title, text }) {
 
 function App() {
 	return (
-		<>
-			<script
-				type='application/ld+json'
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-			/>
-			<script
-				type='application/ld+json'
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-			/>
-			<script
-				type='application/ld+json'
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-			/>
-
-			<div className='page-shell'>
+		<div className='page-shell'>
 				<header className='hero'>
 					<nav className='topbar' aria-label='Основная навигация'>
 						<a className='brand' href='/'>
@@ -232,10 +215,10 @@ function App() {
 						/>
 						<div className='faq-list'>
 							{faqs.map(item => (
-								<details className='faq-item' key={item.question}>
-									<summary>{item.question}</summary>
+								<article className='faq-item' key={item.question}>
+									<h3>{item.question}</h3>
 									<p>{item.answer}</p>
-								</details>
+								</article>
 							))}
 						</div>
 					</section>
@@ -255,7 +238,6 @@ function App() {
 					</section>
 				</main>
 			</div>
-		</>
 	)
 }
 

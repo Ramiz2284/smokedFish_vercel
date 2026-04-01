@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://smoked-fish-vercel.vercel.app/sitemap.xml
