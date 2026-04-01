@@ -54,7 +54,7 @@ export const products = [
 		id: 'trout',
 		name: 'Копчёная форель',
 		entity: 'Smoked trout / Turkish salmon',
-		price: '1100₺ / кг',
+		price: '1300₺ / кг',
 		image: '/images/forel1.jpg',
 		alt: 'Копчёная форель в Анталии',
 		whatItIs: 'Крупная форель, которую в Турции часто называют Turkish salmon.',
