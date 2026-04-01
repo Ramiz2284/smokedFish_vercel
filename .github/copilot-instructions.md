@@ -35,7 +35,7 @@ Products are defined as objects with `id`, `title`, `image`, `price`, `descripti
   id: 1,
   title: 'Product name',
   image: '/images/filename.jpg',  // Primary image for grid
-  price: '1100₺ / kg',           // Turkish lira prices
+  price: '1300₺ / kg',           // Turkish lira prices
   description: 'Russian text...',
   images: ['/images/img1.jpg', '/images/img2.jpg'], // Slider images
 }
