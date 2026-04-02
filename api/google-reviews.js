@@ -1,6 +1,7 @@
 /* global process */
 
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000
+const FALLBACK_CACHE_TTL_MS = 5 * 60 * 1000
 const FALLBACK_MAPS_URL = 'https://share.google/TruYWAT9NwOFrC2iW'
 
 function getCacheStore() {
@@ -52,10 +53,13 @@ async function fetchGoogleReviews() {
 	const mapsUrl = process.env.GOOGLE_MAPS_URL || FALLBACK_MAPS_URL
 
 	if (!apiKey || !placeId) {
-		return buildFallbackPayload({
+		return {
+			ok: true,
+			payload: buildFallbackPayload({
 			reason: 'missing_google_config',
 			mapsUrl,
-		})
+			}),
+		}
 	}
 
 	const url = new URL(`https://places.googleapis.com/v1/places/${placeId}`)
@@ -71,22 +75,46 @@ async function fetchGoogleReviews() {
 
 	if (!response.ok) {
 		const errorText = await response.text()
-		throw new Error(`Google Places API failed: ${response.status} ${errorText}`)
+		let googleError = null
+
+		try {
+			googleError = JSON.parse(errorText)
+		} catch {
+			googleError = null
+		}
+
+		return {
+			ok: false,
+			payload: buildFallbackPayload({
+				reason: 'google_api_error',
+				debug: {
+					httpStatus: response.status,
+					googleStatus: googleError?.error?.status || '',
+					message:
+						googleError?.error?.message ||
+						errorText.slice(0, 240) ||
+						'Google Places API request failed',
+				},
+			}),
+		}
 	}
 
 	const place = await response.json()
 
 	return {
-		source: 'google',
-		displayName: place?.displayName?.text || 'Smoked Fish Antalya',
-		rating: typeof place?.rating === 'number' ? place.rating : null,
-		userRatingCount:
-			typeof place?.userRatingCount === 'number' ? place.userRatingCount : null,
-		reviews: Array.isArray(place?.reviews)
-			? place.reviews.slice(0, 3).map(normalizeReview)
-			: [],
-		mapsUrl: place?.googleMapsUri || mapsUrl,
-		updatedAt: new Date().toISOString(),
+		ok: true,
+		payload: {
+			source: 'google',
+			displayName: place?.displayName?.text || 'Smoked Fish Antalya',
+			rating: typeof place?.rating === 'number' ? place.rating : null,
+			userRatingCount:
+				typeof place?.userRatingCount === 'number' ? place.userRatingCount : null,
+			reviews: Array.isArray(place?.reviews)
+				? place.reviews.slice(0, 3).map(normalizeReview)
+				: [],
+			mapsUrl: place?.googleMapsUri || mapsUrl,
+			updatedAt: new Date().toISOString(),
+		},
 	}
 }
 
@@ -106,14 +134,22 @@ export default async function handler(req, res) {
 	}
 
 	try {
-		const payload = await fetchGoogleReviews()
-		cache.payload = payload
-		cache.expiresAt = now + CACHE_TTL_MS
-		return res.status(200).json(payload)
+		const result = await fetchGoogleReviews()
+		const ttl = result.ok ? CACHE_TTL_MS : FALLBACK_CACHE_TTL_MS
+
+		if (!result.ok) {
+			console.error('Google reviews fetch failed', result.payload.debug || {})
+		}
+		cache.payload = result.payload
+		cache.expiresAt = now + ttl
+		return res.status(200).json(result.payload)
 	} catch {
 		const fallbackPayload = buildFallbackPayload({
 			reason: 'google_api_error',
 		})
+		console.error('Google reviews fetch crashed before response parsing')
+		cache.payload = fallbackPayload
+		cache.expiresAt = now + FALLBACK_CACHE_TTL_MS
 		return res.status(200).json(fallbackPayload)
 	}
 }
