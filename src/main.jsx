@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { createRoot, hydrateRoot } from 'react-dom/client'
+import { createRoot } from 'react-dom/client'
 import './index.css'
 import './App.css'
 import App from './App.jsx'
@@ -11,8 +11,6 @@ const app = (
 	</StrictMode>
 )
 
-if (container.hasChildNodes()) {
-	hydrateRoot(container, app)
-} else {
-	createRoot(container).render(app)
-}
+// The page is prerendered as static HTML for crawlers and no-JS visitors.
+// Mounting with createRoot avoids brittle hydration mismatches on Vercel.
+createRoot(container).render(app)
