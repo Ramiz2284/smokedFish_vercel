@@ -1,4 +1,5 @@
 import {
+	GOOGLE_MAPS_REVIEWS_URL,
 	MAPS_URL,
 	WHATSAPP_URL,
 	benefits,
@@ -10,6 +11,7 @@ import {
 	products,
 	trustPoints,
 } from './siteContent'
+import GoogleReviewsSection from './components/GoogleReviewsSection'
 
 function CTAGroup({ compact = false }) {
 	return (
@@ -51,6 +53,7 @@ function App() {
 						Smoked Fish Antalya
 					</a>
 					<div className='topbar-links'>
+						<a href='#reviews'>Отзывы</a>
 						<a href='#products'>Рыба</a>
 						<a href='#delivery'>Доставка</a>
 						<a href='#faq'>FAQ</a>
@@ -113,6 +116,8 @@ function App() {
 					</div>
 					<CTAGroup compact />
 				</section>
+
+				<GoogleReviewsSection />
 
 				<section
 					className='section section--accent'
@@ -198,9 +203,17 @@ function App() {
 								<li>Доставка по Анталии подтверждается при заказе.</li>
 								<li>Ответим по наличию, весу и ближайшему времени доставки.</li>
 								<li>
-									Посмотреть точку на карте можно по{' '}
+									Точку на карте и все отзывы можно открыть по{' '}
 									<a href={MAPS_URL} target='_blank' rel='noreferrer'>
 										ссылке
+									</a>
+									{' '}или сразу в{' '}
+									<a
+										href={GOOGLE_MAPS_REVIEWS_URL}
+										target='_blank'
+										rel='noreferrer'
+									>
+										Google Maps
 									</a>
 									.
 								</li>

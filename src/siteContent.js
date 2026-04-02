@@ -1,6 +1,7 @@
 export const WHATSAPP_NUMBER = '905444558407'
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`
 export const MAPS_URL = 'https://maps.app.goo.gl/xRnRg3gnVhYKENgr9'
+export const GOOGLE_MAPS_REVIEWS_URL = 'https://share.google/TruYWAT9NwOFrC2iW'
 export const SITE_URL = 'https://smoked-fish-vercel.vercel.app/'
 
 export const ctaMessage =
