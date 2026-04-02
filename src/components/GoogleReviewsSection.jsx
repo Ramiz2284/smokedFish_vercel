@@ -10,16 +10,6 @@ const fallbackData = {
 	mapsUrl: GOOGLE_MAPS_REVIEWS_URL,
 }
 
-function formatReviewCount(value) {
-	if (!value) return 'Рейтинг появится после загрузки Google Reviews'
-	return `${value} отзывов в Google`
-}
-
-function renderStars(value) {
-	if (!value) return 'Google Reviews'
-	return `${value.toFixed(1)} / 5`
-}
-
 function truncateText(text, maxLength = 220) {
 	if (!text) return ''
 	if (text.length <= maxLength) return text
@@ -53,7 +43,7 @@ function ReviewCard({ review }) {
 
 export default function GoogleReviewsSection() {
 	const [state, setState] = useState({
-		status: 'loading',
+		status: 'fallback',
 		data: fallbackData,
 	})
 
@@ -101,6 +91,7 @@ export default function GoogleReviewsSection() {
 
 	const { data, status } = state
 	const hasReviews = Array.isArray(data.reviews) && data.reviews.length > 0
+	const isReady = status === 'ready'
 
 	return (
 		<section className='section section--accent' id='reviews' aria-labelledby='reviews-title'>
@@ -115,14 +106,21 @@ export default function GoogleReviewsSection() {
 
 			<div className='reviews-panel'>
 				<div className='reviews-summary'>
-					<div className='reviews-summary__score'>{data.rating ? data.rating.toFixed(1) : 'Google'}</div>
+					<div className='reviews-summary__score'>
+						{isReady && data.rating ? data.rating.toFixed(1) : 'Google'}
+					</div>
 					<div className='reviews-summary__content'>
 						<p className='reviews-summary__label'>Google Reviews</p>
-						<h3>{renderStars(data.rating)}</h3>
-						<p>{formatReviewCount(data.userRatingCount)}</p>
-						{status === 'loading' ? (
-							<p className='reviews-summary__status'>Загружаем рейтинг и отзывы из Google Maps...</p>
-						) : null}
+						<h3>
+							{isReady && data.rating
+								? `${data.rating.toFixed(1)} / 5`
+								: 'Отзывы загружаются автоматически'}
+						</h3>
+						<p>
+							{isReady && data.userRatingCount
+								? `${data.userRatingCount} отзывов в Google`
+								: 'После загрузки страницы мы получаем официальный рейтинг и отзывы через Google Places API.'}
+						</p>
 						{status === 'error' ? (
 							<p className='reviews-summary__status'>
 								Рейтинг временно недоступен, но отзывы можно открыть прямо в Google Maps.
@@ -130,8 +128,7 @@ export default function GoogleReviewsSection() {
 						) : null}
 						{status === 'fallback' ? (
 							<p className='reviews-summary__status'>
-								Подключите официальный Google Places API, чтобы на сайте показывались
-								актуальные отзывы автоматически.
+								Если отзывы временно недоступны, карточку компании всё равно можно открыть прямо в Google Maps.
 							</p>
 						) : null}
 						<a
@@ -152,9 +149,8 @@ export default function GoogleReviewsSection() {
 							<article className='review-card review-card--placeholder'>
 								<h3>Отзывы из Google появятся здесь</h3>
 								<p className='review-card__text'>
-									Даже если текст отзывов временно недоступен, ссылка на Google Maps
-									всегда остаётся доступной. Это безопасный fallback для продакшена и
-									корректной интеграции через официальный API.
+									Это безопасный fallback для продакшена: ключ Google остаётся на
+									сервере, а посетитель всегда может перейти к отзывам в Google Maps.
 								</p>
 							</article>
 						)}
