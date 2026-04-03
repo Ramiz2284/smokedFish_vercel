@@ -8,6 +8,7 @@ const REALTIME_CACHE_TTL_MS = 60 * 1000
 const TOKEN_SKEW_MS = 60 * 1000
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token'
 const GOOGLE_ANALYTICS_SCOPE = 'https://www.googleapis.com/auth/analytics.readonly'
+const GA4_MIN_START_DATE = '2015-08-14'
 
 function getCacheStore() {
 	if (!globalThis.__analyticsStatsCache) {
@@ -139,7 +140,7 @@ function readMetricValue(response, index = 0) {
 
 async function fetchReportData() {
 	const response = await runAnalyticsRequest('runReport', {
-		dateRanges: [{ startDate: '2000-01-01', endDate: 'today' }],
+		dateRanges: [{ startDate: GA4_MIN_START_DATE, endDate: 'today' }],
 		metrics: [{ name: 'sessions' }, { name: 'totalUsers' }],
 	})
 
