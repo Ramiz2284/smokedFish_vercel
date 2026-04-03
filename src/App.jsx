@@ -12,6 +12,7 @@ import {
 	trustPoints,
 } from './siteContent'
 import GoogleReviewsSection from './components/GoogleReviewsSection'
+import VisitorStatsSection from './components/VisitorStatsSection'
 
 function CTAGroup({ compact = false }) {
 	return (
@@ -100,6 +101,8 @@ function App() {
 			</header>
 
 			<main>
+				<VisitorStatsSection />
+
 				<section className='section' aria-labelledby='why-buy'>
 					<SectionHeading
 						eyebrow='Почему заказывают у нас'

@@ -325,6 +325,10 @@ img {
 	padding: 58px 0 0;
 }
 
+.stats-section {
+	padding-top: 42px;
+}
+
 .section--accent {
 	position: relative;
 }
@@ -355,9 +359,53 @@ img {
 .benefit-grid,
 .steps-grid,
 .product-grid,
-.reviews-grid {
+.reviews-grid,
+.stats-grid {
 	display: grid;
 	gap: 18px;
+}
+
+.stats-grid {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stats-card {
+	padding: 22px;
+	border-radius: 18px;
+	background: linear-gradient(180deg, rgba(31, 23, 17, 0.98), rgba(25, 19, 14, 0.98));
+	border: 1px solid rgba(61, 47, 34, 0.92);
+	box-shadow:
+		0 24px 60px rgba(0, 0, 0, 0.26),
+		inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.stats-card__label {
+	margin: 0 0 10px;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: #c37a46;
+}
+
+.stats-card h3 {
+	margin: 0 0 12px;
+	font-family: 'Playfair Display', serif;
+	font-size: clamp(1.9rem, 3vw, 3rem);
+	line-height: 1;
+	color: #f4ebdf;
+}
+
+.stats-card__description,
+.stats-note {
+	margin: 0;
+	font-size: 0.95rem;
+	line-height: 1.7;
+	color: #b8a391;
+}
+
+.stats-note {
+	margin-top: 14px;
 }
 
 .benefit-grid {
@@ -708,7 +756,8 @@ img {
 	.product-grid,
 	.hero-grid,
 	.delivery-panel,
-	.reviews-panel {
+	.reviews-panel,
+	.stats-grid {
 		grid-template-columns: 1fr;
 	}
 

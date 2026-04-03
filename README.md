@@ -23,11 +23,24 @@ Required client-side environment variable:
 
 - `VITE_GA_MEASUREMENT_ID`
 
+Required server-side environment variables for the on-site stats widget:
+
+- `GA_PROPERTY_ID`
+- `GA_SERVICE_ACCOUNT_EMAIL`
+- `GA_SERVICE_ACCOUNT_PRIVATE_KEY`
+
 Example:
 
 - `VITE_GA_MEASUREMENT_ID=G-SBQ7HCYXZ6`
+- `GA_PROPERTY_ID=468584411`
 
 Add it in Vercel Project Settings -> Environment Variables, then redeploy the site.
+
+The server uses the official Google Analytics Data API through:
+
+- `/api/analytics-stats`
+
+The Google service account must have access to the GA4 property.
 
 ## Google Reviews setup
 

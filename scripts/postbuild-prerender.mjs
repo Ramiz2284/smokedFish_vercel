@@ -44,6 +44,34 @@ const renderCTA = compact => `
 	</div>
 `
 
+const renderStatsFallback = () => `
+<section class="section stats-section" id="stats" aria-labelledby="stats-title">
+	<div class="section-heading">
+		<p class="section-eyebrow">Статистика сайта</p>
+		<h2 id="stats-title">Сколько людей уже заходили на сайт</h2>
+		<p>Показываем общие и realtime-данные из Google Analytics. Цифры обновляются автоматически и помогают понимать текущую активность на сайте.</p>
+	</div>
+	<div class="stats-grid">
+		<article class="stats-card">
+			<p class="stats-card__label">Всего посещений</p>
+			<h3>—</h3>
+			<p class="stats-card__description">Сколько раз открывали сайт с момента запуска аналитики.</p>
+		</article>
+		<article class="stats-card">
+			<p class="stats-card__label">Уникальных гостей</p>
+			<h3>—</h3>
+			<p class="stats-card__description">Примерное число разных пользователей по данным Google Analytics.</p>
+		</article>
+		<article class="stats-card">
+			<p class="stats-card__label">Сейчас на сайте</p>
+			<h3>—</h3>
+			<p class="stats-card__description">Оценка активных посетителей в realtime по данным Google Analytics.</p>
+		</article>
+	</div>
+	<p class="stats-note">Статистика появится после того, как Google Analytics накопит первые данные.</p>
+</section>
+`
+
 const renderReviewsFallback = () => `
 <section class="section section--accent" id="reviews" aria-labelledby="reviews-title">
 	<div class="section-heading">
@@ -111,6 +139,7 @@ const prerenderedHtml = `
 		</div>
 	</header>
 	<main>
+		${renderStatsFallback()}
 		<section class="section" aria-labelledby="why-buy">
 			<div class="section-heading">
 				<p class="section-eyebrow">Почему заказывают у нас</p>
