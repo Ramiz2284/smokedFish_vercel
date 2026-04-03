@@ -15,6 +15,20 @@ Production build:
 npm run build
 ```
 
+## Google Analytics 4 setup
+
+The site can load Google Analytics 4 without hardcoding the tracking ID in markup.
+
+Required client-side environment variable:
+
+- `VITE_GA_MEASUREMENT_ID`
+
+Example:
+
+- `VITE_GA_MEASUREMENT_ID=G-SBQ7HCYXZ6`
+
+Add it in Vercel Project Settings -> Environment Variables, then redeploy the site.
+
 ## Google Reviews setup
 
 The site uses the official Google Maps Platform Places API through the Vercel serverless route:
